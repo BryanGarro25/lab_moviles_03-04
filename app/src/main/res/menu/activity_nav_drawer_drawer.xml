@@ -26,9 +26,13 @@
                 android:title="Cursos" />
             <item
                 android:id="@+id/nav_profesor"
-                android:enabled="false"
+                android:enabled="true"
                 android:icon="@drawable/ic_menu_listas"
                 android:title="Profesores" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_menu_salir"
+                android:title="Log Out" />
         </menu>
     </item>
 </menu>

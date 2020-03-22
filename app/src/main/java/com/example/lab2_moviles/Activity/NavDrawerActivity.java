@@ -67,7 +67,20 @@ public class NavDrawerActivity extends AppCompatActivity implements NavigationVi
     }
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if(id==R.id.nav_profesor){
+            abrirMantenimientoProfesor();
+        } else{
+            if(id==R.id.nav_logout){
+                this.abrirLogin();
+            }
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
     @Override
     public void onBackPressed() {
@@ -98,6 +111,11 @@ public class NavDrawerActivity extends AppCompatActivity implements NavigationVi
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void abrirMantenimientoProfesor(){
+        finish();
+        Intent a = new Intent(this, AdmProfesorActivity.class);
+        startActivity(a);
     }
     public void abrirLogin() {
         finish();
