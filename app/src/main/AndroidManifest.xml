@@ -10,9 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Activity.AddUpdProfesorActivity"
+            android:label="@string/title_activity_adm_profesor"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
             android:name=".Activity.AdmProfesorActivity"
             android:label="@string/title_activity_adm_profesor"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activity.NavDrawerActivity"
             android:label="@string/title_activity_nav_drawer"
