@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class AddUpdProfesorActivity extends AppCompatActivity {
+
     private FloatingActionButton finishBtn;
     private boolean editable = true;
     private EditText nombreField;
@@ -119,5 +120,4 @@ public class AddUpdProfesorActivity extends AppCompatActivity {
         }
         return true;
     }
-
 }

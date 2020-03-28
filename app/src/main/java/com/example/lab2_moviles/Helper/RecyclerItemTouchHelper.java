@@ -85,8 +85,11 @@ public class RecyclerItemTouchHelper  extends ItemTouchHelper.SimpleCallback{
     public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
                                 RecyclerView.ViewHolder viewHolder, float dX, float dY,
                                 int actionState, boolean isCurrentlyActive) {
-        getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
-                actionState, isCurrentlyActive);
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+            drawBackground(dX);
+            getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
+                    actionState, isCurrentlyActive);
+        }
     }
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
@@ -112,6 +115,19 @@ public class RecyclerItemTouchHelper  extends ItemTouchHelper.SimpleCallback{
     }
 
 
+    private void drawBackground(float dX) {
+        if (this.listener.getClass().getSimpleName().equals("MatriculaActivity")) {
+            backgroundViewDelete.setVisibility(View.VISIBLE);
+        } else {
+            if (dX > 0) {
+                backgroundViewEdit.setVisibility(View.VISIBLE);
+                backgroundViewDelete.setVisibility(View.GONE);
+            } else {
+                backgroundViewDelete.setVisibility(View.VISIBLE);
+                backgroundViewEdit.setVisibility(View.GONE);
+            }
+        }
+    }
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         listener.onSwiped(viewHolder, direction, viewHolder.getAdapterPosition());

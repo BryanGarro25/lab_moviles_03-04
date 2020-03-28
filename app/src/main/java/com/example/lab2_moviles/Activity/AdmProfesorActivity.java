@@ -85,6 +85,7 @@ public class AdmProfesorActivity extends AppCompatActivity implements RecyclerIt
             Profesor auxiliar;
             auxiliar = (Profesor)getIntent().getSerializableExtra("addProfesor");
             if(auxiliar != null){ // add profesor trae algun elemento, agregar nuevo
+                this.model.getProfesorList().add(auxiliar);
                 profesorList.add(auxiliar);
                 Toast.makeText(getApplicationContext(), auxiliar.getNombre() + " agregado correctamente", Toast.LENGTH_LONG).show();
             } else{ // se esta editando un profesor
