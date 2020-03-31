@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -39,12 +40,15 @@ public class AdmProfesorActivity extends AppCompatActivity implements RecyclerIt
     private SearchView searchView;
     private FloatingActionButton addProfesor;
     private Data model;
+    private CoordinatorLayout coordinatorLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adm_profesor);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        this.coordinatorLayout = findViewById(R.id.coordinator_layout_profesor);
 
         getSupportActionBar().setTitle(getString(R.string.profesor));
 
@@ -71,11 +75,44 @@ public class AdmProfesorActivity extends AppCompatActivity implements RecyclerIt
         });
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
-        mAdapter.notifyDataSetChanged();
 
+        intentInformation(); //revisar si se edita o se agrega un profesor
+        mAdapter.notifyDataSetChanged(); //Refrescar la lista del reciclerView
+    }
+    public void intentInformation(){
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){ // si extras recibio algun objeto
+            Profesor auxiliar;
+            auxiliar = (Profesor)getIntent().getSerializableExtra("addProfesor");
+            if(auxiliar != null){ // add profesor trae algun elemento, agregar nuevo
+                this.model.getProfesorList().add(auxiliar);
+                profesorList.add(auxiliar);
+                Toast.makeText(getApplicationContext(), auxiliar.getNombre() + " agregado correctamente", Toast.LENGTH_LONG).show();
+            } else{ // se esta editando un profesor
+                auxiliar = (Profesor)getIntent().getSerializableExtra("editProfesor");
+                boolean founded = false;
+                for (Profesor profesor : profesorList) {
+                    if (profesor.getCedula().equals(auxiliar.getCedula())) {
+                        profesor.setNombre(auxiliar.getNombre());
+                        profesor.setEmail(auxiliar.getEmail());
+                        profesor.setTelefono(auxiliar.getTelefono());
+                        founded = true;
+                        break;
+                    }
+                }
+                //check if exist
+                if (founded) {
+                    Toast.makeText(getApplicationContext(), auxiliar.getNombre() + " editado correctamente", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), auxiliar.getNombre() + " no encontrado", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
     }
     public void goToAddUpdProfesor(){
-
+        Intent intent = new Intent(this, AddUpdProfesorActivity.class);
+        intent.putExtra("editable", false);
+        startActivity(intent);
     }
     @Override
     public void onContactSelected(Profesor profesor) {
@@ -126,7 +163,7 @@ public class AdmProfesorActivity extends AppCompatActivity implements RecyclerIt
                 mAdapter.removeItem(viewHolder.getAdapterPosition());
 
                 // showing snack bar with Undo option
-                /*Snackbar snackbar = Snackbar.make(coordinatorLayout, name + " removido!", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(coordinatorLayout, name + " removido!", Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -135,17 +172,16 @@ public class AdmProfesorActivity extends AppCompatActivity implements RecyclerIt
                     }
                 });
                 snackbar.setActionTextColor(Color.YELLOW);
-                snackbar.show();*/
+                snackbar.show();
             }
-        } else {
-            //If is editing a row object
-            /*Profesor aux = mAdapter.getSwipedItem(viewHolder.getAdapterPosition());
+        } else { //edicion de un profesor
+            Profesor aux = mAdapter.getSwipedItem(viewHolder.getAdapterPosition());
             //send data to Edit Activity
             Intent intent = new Intent(this, AddUpdProfesorActivity.class);
             intent.putExtra("editable", true);
             intent.putExtra("profesor", aux);
             mAdapter.notifyDataSetChanged(); //restart left swipe view
-            startActivity(intent);*/
+            startActivity(intent);
         }
     }
     @Override

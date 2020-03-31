@@ -13,6 +13,9 @@ public class Profesor implements Serializable{
         this.email = email;
         this.telefono = telefono;
     }
+    public Profesor(){
+
+    }
 
     public String getCedula() {
         return cedula;

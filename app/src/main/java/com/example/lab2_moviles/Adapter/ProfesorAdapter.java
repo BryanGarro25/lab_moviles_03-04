@@ -56,9 +56,8 @@ public class ProfesorAdapter extends RecyclerView.Adapter<ProfesorAdapter.MyView
         this.profesorListFiltered = profesorList;
     }
 
-    @NonNull
     @Override
-    public ProfesorAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ProfesorAdapter.MyViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_list_row, parent, false);
 
@@ -66,7 +65,7 @@ public class ProfesorAdapter extends RecyclerView.Adapter<ProfesorAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProfesorAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(ProfesorAdapter.MyViewHolder holder, int position) {
         final Profesor profesor = profesorListFiltered.get(position);
         holder.titulo1.setText(profesor.getNombre());
         holder.titulo2.setText(profesor.getEmail());
