@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lab2_moviles.Adapter.CursoAdapter;
 import com.example.lab2_moviles.Adapter.ProfesorAdapter;
 
 public class RecyclerItemTouchHelper  extends ItemTouchHelper.SimpleCallback{
@@ -64,6 +65,11 @@ public class RecyclerItemTouchHelper  extends ItemTouchHelper.SimpleCallback{
                 backgroundViewEdit = ((ProfesorAdapter.MyViewHolder) viewHolder).viewBackgroundEdit;
                 backgroundViewDelete = ((ProfesorAdapter.MyViewHolder) viewHolder).viewBackgroundDelete;
                 foregroundView = ((ProfesorAdapter.MyViewHolder) viewHolder).viewForeground;
+            }
+            if (this.listener.getClass().getSimpleName().equals("AdmCursoActivity")) {
+                backgroundViewEdit = ((CursoAdapter.MyViewHolder) viewHolder).viewBackgroundEdit;
+                backgroundViewDelete = ((CursoAdapter.MyViewHolder) viewHolder).viewBackgroundDelete;
+                foregroundView = ((CursoAdapter.MyViewHolder) viewHolder).viewForeground;
             }
             if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
                 //fancy color picked
