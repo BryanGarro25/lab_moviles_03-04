@@ -6,7 +6,7 @@
         <menu>
             <item
                 android:id="@+id/nav_curso"
-                android:enabled="false"
+                android:enabled="true"
                 android:icon="@drawable/ic_menu_listas"
                 android:title="Cursos" />
             <item
