@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener, CursoAdapter.CursoAdapterListener {
-
     private RecyclerView mRecyclerView;
     private CursoAdapter mAdapter;
     private List<Curso> cursoList;
@@ -44,7 +43,6 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
     private SearchView searchView;
     private FloatingActionButton fab;
     private Data model;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +50,8 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         Toolbar toolbar = findViewById(R.id.toolbarC);
         setSupportActionBar(toolbar);
 
-        //toolbar fancy stuff
+        this.coordinatorLayout = findViewById(R.id.coordinator_layout_curso);
+
         getSupportActionBar().setTitle(getString(R.string.curso));
 
         mRecyclerView = findViewById(R.id.recycler_cursosFld);
@@ -60,9 +59,7 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         model= new Data();
         cursoList= model.getCursoList();
         mAdapter = new CursoAdapter(cursoList, this);
-        coordinatorLayout = findViewById(R.id.coordinator_layout_curso);
 
-        // white background notification bar
         whiteNotificationBar(mRecyclerView);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -71,7 +68,6 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
 
-        // go to update or add career
         fab = findViewById(R.id.AddCurso);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,62 +75,51 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
                 goToAddUpdCurso();
             }
         });
-
-        //delete swiping left and right
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
-        //should use database info
-
-
-        // Receive the Carrera sent by AddUpdCarreraActivity
-        checkIntentInformation();
-
-        //refresh view
+        intentInformation();
         mAdapter.notifyDataSetChanged();
     }
-
-    @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if (direction == ItemTouchHelper.START) {
-            if (viewHolder instanceof CursoAdapter.MyViewHolder) {
-                // get the removed item name to display it in snack bar
-                String name = cursoList.get(viewHolder.getAdapterPosition()).getNombre();
-
-                // save the index deleted
-                final int deletedIndex = viewHolder.getAdapterPosition();
-                // remove the item from recyclerView
-                mAdapter.removeItem(viewHolder.getAdapterPosition());
-
-                // showing snack bar with Undo option
-                Snackbar snackbar = Snackbar.make(coordinatorLayout, name + " removido!", Snackbar.LENGTH_LONG);
-                snackbar.setAction("UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // undo is selected, restore the deleted item from adapter
-                        mAdapter.restoreItem(deletedIndex);
+    public void intentInformation(){
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){ // si extras recibio algun objeto
+            Curso auxiliar;
+            auxiliar = (Curso)getIntent().getSerializableExtra("fab");
+            if(auxiliar != null){ // add profesor trae algun elemento, agregar nuevo
+                this.model.getCursoList().add(auxiliar);
+                cursoList.add(auxiliar);
+                Toast.makeText(getApplicationContext(), auxiliar.getNombre() + " agregado correctamente", Toast.LENGTH_LONG).show();
+            } else{ // se esta editando un profesor
+                auxiliar = (Curso)getIntent().getSerializableExtra("editProfesor");
+                boolean founded = false;
+                for (Curso c1 : cursoList) {
+                    if (c1.getCodigo().equals(auxiliar.getCodigo())) {
+                        c1.setNombre(auxiliar.getNombre());
+                        c1.setHoras(auxiliar.getHoras());
+                        c1.setCreditos(auxiliar.getCreditos());
+                        founded = true;
+                        break;
                     }
-                });
-                snackbar.setActionTextColor(Color.YELLOW);
-                snackbar.show();
+                }
+                //check if exist
+                if (founded) {
+                    Toast.makeText(getApplicationContext(), auxiliar.getNombre() + " editado correctamente", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), auxiliar.getNombre() + " no encontrado", Toast.LENGTH_LONG).show();
+                }
             }
-        } else {
-            //If is editing a row object
-            Curso aux = mAdapter.getSwipedItem(viewHolder.getAdapterPosition());
-            //send data to Edit Activity
-            Intent intent = new Intent(this, AddUpdCursoActivity.class);
-            intent.putExtra("editable", true);
-            intent.putExtra("curso", aux);
-            mAdapter.notifyDataSetChanged(); //restart left swipe view
-            startActivity(intent);
         }
     }
-
-    @Override
-    public void onItemMove(int source, int target) {
-        mAdapter.onItemMove(source, target);
+    private void goToAddUpdCurso() {
+        Intent intent = new Intent(this, AddUpdCursoActivity.class);
+        intent.putExtra("editable", false);
+        startActivity(intent);
     }
-
+    @Override
+    public void onContactSelected(Curso curso) {
+        Toast.makeText(getApplicationContext(), "Selected: " + curso.getCodigo() + ", " + curso.getNombre(), Toast.LENGTH_LONG).show();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds cursoList to the action bar if it is present.
@@ -168,6 +153,65 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
     }
 
     @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (direction == ItemTouchHelper.START) {
+            if (viewHolder instanceof CursoAdapter.MyViewHolder) {
+                // get the removed item name to display it in snack bar
+                String name = cursoList.get(viewHolder.getAdapterPosition()).getNombre();
+
+                // save the index deleted
+                final int deletedIndex = viewHolder.getAdapterPosition();
+                // remove the item from recyclerView
+                mAdapter.removeItem(viewHolder.getAdapterPosition());
+
+                // showing snack bar with Undo option
+                Snackbar snackbar = Snackbar.make(coordinatorLayout, name + " removido!", Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // undo is selected, restore the deleted item from adapter
+                        mAdapter.restoreItem(deletedIndex);
+                    }
+                });
+                snackbar.setActionTextColor(Color.YELLOW);
+                snackbar.show();
+            }
+        } else {
+            Curso aux = mAdapter.getSwipedItem(viewHolder.getAdapterPosition());
+            //send data to Edit Activity
+            Intent intent = new Intent(this, AddUpdCursoActivity.class);
+            intent.putExtra("editable", true);
+            intent.putExtra("curso", aux);
+            mAdapter.notifyDataSetChanged(); //restart left swipe view
+            startActivity(intent);
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        if (!searchView.isIconified()) {
+            searchView.setIconified(true);
+            return;
+        }
+        Intent a = new Intent(this, NavDrawerActivity.class);
+        a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(a);
+        super.onBackPressed();
+    }
+    @Override
+    public void onItemMove(int source, int target) {
+        mAdapter.onItemMove(source, target);
+    }
+
+    private void whiteNotificationBar(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int flags = view.getSystemUiVisibility();
+            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            view.setSystemUiVisibility(flags);
+            getWindow().setStatusBarColor(Color.WHITE);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -181,74 +225,6 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
 
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onBackPressed() {
-        if (!searchView.isIconified()) {
-            searchView.setIconified(true);
-            return;
-        }
-        Intent a = new Intent(this, NavDrawerActivity.class);
-        a.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(a);
-        super.onBackPressed();
-    }
-
-    private void whiteNotificationBar(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int flags = view.getSystemUiVisibility();
-            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            view.setSystemUiVisibility(flags);
-            getWindow().setStatusBarColor(Color.WHITE);
-        }
-    }
-
-    @Override
-    public void onContactSelected(Curso curso) { //TODO get the select item of recycleView
-        Toast.makeText(getApplicationContext(), "Selected: " + curso.getCodigo() + ", " + curso.getNombre(), Toast.LENGTH_LONG).show();
-    }
-
-    private void checkIntentInformation() {
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            Curso aux;
-            aux = (Curso) getIntent().getSerializableExtra("addCurso");
-            if (aux == null) {
-                aux = (Curso) getIntent().getSerializableExtra("editCurso");
-                if (aux != null) {
-                    //found an item that can be updated
-                    boolean founded = false;
-                    for (Curso curso : cursoList) {
-                        if (curso.getCodigo().equals(aux.getCodigo())) {
-                            curso.setNombre(aux.getNombre());
-                            curso.setCreditos(aux.getCreditos());
-                            curso.setHoras(aux.getHoras());
-                            founded = true;
-                            break;
-                        }
-                    }
-                    //check if exist
-                    if (founded) {
-                        Toast.makeText(getApplicationContext(), aux.getNombre() + " editado correctamente", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), aux.getNombre() + " no encontrado", Toast.LENGTH_LONG).show();
-                    }
-                }
-            } else {
-                //found a new Curso Object
-                cursoList.add(aux);
-                Toast.makeText(getApplicationContext(), aux.getNombre() + " agregado correctamente", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private void goToAddUpdCurso() {
-        Intent intent = new Intent(this, AddUpdCursoActivity.class);
-        intent.putExtra("editable", false);
-        startActivity(intent);
-    }
-
-
 
 
 

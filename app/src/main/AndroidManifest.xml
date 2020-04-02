@@ -18,6 +18,10 @@
             android:label="@string/title_activity_adm_profesor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".Activity.AdmCursoActivity"
+            android:label="@string/title_activity_adm_curso"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".Activity.NavDrawerActivity"
             android:label="@string/title_activity_nav_drawer"
             android:theme="@style/AppTheme.NoActionBar" />

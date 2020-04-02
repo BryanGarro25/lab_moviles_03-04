@@ -11,6 +11,8 @@ public class Data {
     public Data() {
         profesorList = new ArrayList<>();
         this.prepareProfesorData();
+        cursoList = new ArrayList<>();
+        this.prepareCursoData();
     }
     public void prepareProfesorData() {
         Profesor profesor = new Profesor("123", "Jose", "@jose", 678);

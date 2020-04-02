@@ -73,7 +73,9 @@ public class NavDrawerActivity extends AppCompatActivity implements NavigationVi
         //noinspection SimplifiableIfStatement
         if(id==R.id.nav_profesor){
             abrirMantenimientoProfesor();
-        } else{
+        } if(id==R.id.nav_curso){
+            abrirMantenimientoCurso();
+        }else{
             if(id==R.id.nav_logout){
                 this.abrirLogin();
             }
@@ -115,6 +117,11 @@ public class NavDrawerActivity extends AppCompatActivity implements NavigationVi
     public void abrirMantenimientoProfesor(){
         finish();
         Intent a = new Intent(this, AdmProfesorActivity.class);
+        startActivity(a);
+    }
+    public void abrirMantenimientoCurso(){
+        finish();
+        Intent a = new Intent(this, AdmCursoActivity.class);
         startActivity(a);
     }
     public void abrirLogin() {

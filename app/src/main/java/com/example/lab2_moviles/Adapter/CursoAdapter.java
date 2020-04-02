@@ -7,6 +7,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+
 import com.example.lab2_moviles.R;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +26,7 @@ public class CursoAdapter extends RecyclerView.Adapter<CursoAdapter.MyViewHolder
     private Curso deletedItem;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+
         public TextView titulo1, titulo2, description;
         //two layers
         public RelativeLayout viewForeground, viewBackgroundDelete, viewBackgroundEdit;
@@ -46,7 +49,6 @@ public class CursoAdapter extends RecyclerView.Adapter<CursoAdapter.MyViewHolder
             });
         }
     }
-
     public CursoAdapter(List<Curso> cursolist, CursoAdapterListener listener) {
         this.cursoList = cursolist;
         this.listener = listener;
@@ -64,18 +66,16 @@ public class CursoAdapter extends RecyclerView.Adapter<CursoAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(CursoAdapter.MyViewHolder holder, int position) {
-        // rendering view
         final Curso curso = cursoListFiltered.get(position);
         holder.titulo1.setText(curso.getCodigo());
         holder.titulo2.setText(curso.getNombre());
-        holder.description.setText(curso.getCreditos() + " créditos");
+        holder.description.setText("Créditos " + curso.getCreditos());
     }
 
     @Override
     public int getItemCount() {
         return cursoListFiltered.size();
     }
-
     public void removeItem(int position) {
         deletedItem = cursoListFiltered.remove(position);
         Iterator<Curso> iter = cursoList.iterator();
@@ -87,7 +87,6 @@ public class CursoAdapter extends RecyclerView.Adapter<CursoAdapter.MyViewHolder
         // notify item removed
         notifyItemRemoved(position);
     }
-
     public void restoreItem(int position) {
 
         if (cursoListFiltered.size() == cursoList.size()) {
@@ -100,7 +99,6 @@ public class CursoAdapter extends RecyclerView.Adapter<CursoAdapter.MyViewHolder
         // notify item added by position
         notifyItemInserted(position);
     }
-
     public Curso getSwipedItem(int index) {
         if (this.cursoList.size() == this.cursoListFiltered.size()) { //not filtered yet
             return cursoList.get(index);
@@ -108,7 +106,6 @@ public class CursoAdapter extends RecyclerView.Adapter<CursoAdapter.MyViewHolder
             return cursoListFiltered.get(index);
         }
     }
-
     public void onItemMove(int fromPosition, int toPosition) {
         if (cursoList.size() == cursoListFiltered.size()) { // without filter
             if (fromPosition < toPosition) {
@@ -133,7 +130,6 @@ public class CursoAdapter extends RecyclerView.Adapter<CursoAdapter.MyViewHolder
         }
         notifyItemMoved(fromPosition, toPosition);
     }
-
     @Override
     public Filter getFilter() {
         return new Filter() {
