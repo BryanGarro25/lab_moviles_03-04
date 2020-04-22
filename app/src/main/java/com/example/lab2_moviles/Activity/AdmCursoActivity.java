@@ -85,13 +85,13 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         Bundle extras = getIntent().getExtras();
         if(extras != null){ // si extras recibio algun objeto
             Curso auxiliar;
-            auxiliar = (Curso)getIntent().getSerializableExtra("fab");
-            if(auxiliar != null){ // add profesor trae algun elemento, agregar nuevo
-                this.model.getCursoList().add(auxiliar);
+            auxiliar = (Curso)getIntent().getSerializableExtra("addCurso");
+            if(auxiliar != null){ // add curso trae algun elemento, agregar nuevo
+                //this.model.getCursoList().add(auxiliar);
                 cursoList.add(auxiliar);
                 Toast.makeText(getApplicationContext(), auxiliar.getNombre() + " agregado correctamente", Toast.LENGTH_LONG).show();
             } else{ // se esta editando un profesor
-                auxiliar = (Curso)getIntent().getSerializableExtra("editProfesor");
+                auxiliar = (Curso)getIntent().getSerializableExtra("editCurso");
                 boolean founded = false;
                 for (Curso c1 : cursoList) {
                     if (c1.getCodigo().equals(auxiliar.getCodigo())) {
@@ -102,7 +102,6 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
                         break;
                     }
                 }
-                //check if exist
                 if (founded) {
                     Toast.makeText(getApplicationContext(), auxiliar.getNombre() + " editado correctamente", Toast.LENGTH_LONG).show();
                 } else {
@@ -122,10 +121,8 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds cursoList to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search, menu);
 
-        // Associate searchable configuration with the SearchView   !IMPORTANT
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.action_search)
                 .getActionView();

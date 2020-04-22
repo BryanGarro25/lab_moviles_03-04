@@ -12,16 +12,12 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarC"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_adm_curso" />
+    <include
+        layout="@layout/content_adm_curso"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/AddCurso"
@@ -29,6 +25,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:backgroundTint="#009688"
+        app:srcCompat="@drawable/ic_add_black_24dp" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarC"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
