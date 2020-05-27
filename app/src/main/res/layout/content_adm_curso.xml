@@ -4,14 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_adm_curso">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_cursosFld"
-        android:layout_width="397dp"
-        android:layout_height="341dp"
+        android:layout_width="442dp"
+        android:layout_height="730dp"
         android:clipToPadding="false"
         android:paddingBottom="50dp"
         android:scrollbars="vertical"
-        tools:layout_editor_absoluteX="6dp" />
+        tools:layout_editor_absoluteX="-2dp"
+        tools:layout_editor_absoluteY="59dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

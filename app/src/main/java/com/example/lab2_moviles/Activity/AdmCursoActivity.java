@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lab2_moviles.AccesoDatos.AsyncTaskManager;
 import com.example.lab2_moviles.AccesoDatos.Data;
 import com.example.lab2_moviles.Adapter.CursoAdapter;
 import com.example.lab2_moviles.Helper.RecyclerItemTouchHelper;
@@ -31,6 +32,9 @@ import com.example.lab2_moviles.LogicaNegocio.Curso;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.lab2_moviles.R;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,11 +57,52 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         this.coordinatorLayout = findViewById(R.id.coordinator_layout_curso);
 
         getSupportActionBar().setTitle(getString(R.string.curso));
-
         mRecyclerView = findViewById(R.id.recycler_cursosFld);
+
+
+
+
+
+
+
         cursoList = new ArrayList<>();
-        model= new Data();
-        cursoList= model.getCursoList();
+        //model= new Data();
+        //cursoList= model.getCursoList();
+
+        AsyncTaskManager net = new AsyncTaskManager("http://127.0.0.1:14715/servletCursos", new AsyncTaskManager.AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+                try {
+                    JSONArray array = new JSONArray(output);
+                    //carreraList = new ArrayList<>();
+                    for (int i = 0; i < array.length(); i++) {
+                        Curso c = new Curso("FD", "Fundamentos", 3, 4);
+                        c.setCodigo(array.getJSONObject(i).getString("codigo"));
+                        c.setCreditos(array.getJSONObject(i).getInt("creditos"));
+                        c.setHoras(array.getJSONObject(i).getInt("horasSemanales"));
+                        c.setNombre(array.getJSONObject(i).getString("nombre"));
+
+
+                        cursoList.add(c);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        net.execute(AsyncTaskManager.GET);
+
+
+
+
+
+
+
+
+
+
+
         mAdapter = new CursoAdapter(cursoList, this);
 
         whiteNotificationBar(mRecyclerView);
@@ -81,17 +126,21 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         intentInformation();
         mAdapter.notifyDataSetChanged();
     }
+
+
+
+
     public void intentInformation(){
         Bundle extras = getIntent().getExtras();
         if(extras != null){ // si extras recibio algun objeto
             Curso auxiliar;
-            auxiliar = (Curso)getIntent().getSerializableExtra("fab");
-            if(auxiliar != null){ // add profesor trae algun elemento, agregar nuevo
-                this.model.getCursoList().add(auxiliar);
+            auxiliar = (Curso)getIntent().getSerializableExtra("addCurso");
+            if(auxiliar != null){ // add curso trae algun elemento, agregar nuevo
+                //this.model.getCursoList().add(auxiliar);
                 cursoList.add(auxiliar);
                 Toast.makeText(getApplicationContext(), auxiliar.getNombre() + " agregado correctamente", Toast.LENGTH_LONG).show();
-            } else{ // se esta editando un profesor
-                auxiliar = (Curso)getIntent().getSerializableExtra("editProfesor");
+            }else{ // se esta editando un profesor
+                auxiliar = (Curso)getIntent().getSerializableExtra("editCurso");
                 boolean founded = false;
                 for (Curso c1 : cursoList) {
                     if (c1.getCodigo().equals(auxiliar.getCodigo())) {
@@ -102,7 +151,6 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
                         break;
                     }
                 }
-                //check if exist
                 if (founded) {
                     Toast.makeText(getApplicationContext(), auxiliar.getNombre() + " editado correctamente", Toast.LENGTH_LONG).show();
                 } else {
@@ -122,10 +170,8 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds cursoList to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search, menu);
 
-        // Associate searchable configuration with the SearchView   !IMPORTANT
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView) menu.findItem(R.id.action_search)
                 .getActionView();

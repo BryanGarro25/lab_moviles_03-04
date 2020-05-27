@@ -27,10 +27,8 @@ public class AddUpdCursoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_upd_curso);
         editable = true;
 
-        // button check
         fBtn = findViewById(R.id.finishBtn);
 
-        //cleaning stuff
         codFld = findViewById(R.id.codigoCurso);
         nomFld = findViewById(R.id.nombreCurso);
         creditosFld = findViewById(R.id.CantidadCreditosCurso);
@@ -40,27 +38,24 @@ public class AddUpdCursoActivity extends AppCompatActivity {
         creditosFld.setText("");
         horasFld.setText("");
 
-        //receiving data from admCursoActivity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
 
             editable = extras.getBoolean("editable");
-            if (editable) {   // is editing some row
+            if (editable) {
                 Curso aux = (Curso) getIntent().getSerializableExtra("curso");
                 codFld.setText(aux.getCodigo());
                 codFld.setEnabled(false);
                 nomFld.setText(aux.getNombre());
                 creditosFld.setText(Integer.toString(aux.getCreditos()));
                 horasFld.setText(Integer.toString(aux.getHoras()));
-                //edit action
                 fBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         editCurso();
                     }
                 });
-            } else {         // is adding new Carrera object
-                //add new action
+            } else {
                 fBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -73,17 +68,30 @@ public class AddUpdCursoActivity extends AppCompatActivity {
 
     public void addCurso() {
         if (validateForm()) {
-            //do something
             Curso cur = new Curso(codFld.getText().toString(), nomFld.getText().toString(),
                     Integer.parseInt(creditosFld.getText().toString()),
                     Integer.parseInt(horasFld.getText().toString()));
             Intent intent = new Intent(getBaseContext(), AdmCursoActivity.class);
-            //sending curso data
             intent.putExtra("addCurso", cur);
             startActivity(intent);
-            finish(); //prevent go back
+            finish();
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void editCurso() {
         if (validateForm()) {
@@ -91,10 +99,9 @@ public class AddUpdCursoActivity extends AppCompatActivity {
                     Integer.parseInt(creditosFld.getText().toString()),
                     Integer.parseInt(horasFld.getText().toString()));
             Intent intent = new Intent(getBaseContext(), AdmCursoActivity.class);
-            //sending curso data
             intent.putExtra("editCurso", cur);
             startActivity(intent);
-            finish(); //prevent go back
+            finish();
         }
     }
 
