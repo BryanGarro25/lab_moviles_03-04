@@ -8,6 +8,7 @@ import android.os.Build;
 
 import android.os.Bundle;
 
+import com.example.lab2_moviles.AccesoDatos.AsyncTaskManager;
 import com.example.lab2_moviles.AccesoDatos.Data;
 import com.example.lab2_moviles.Adapter.ProfesorAdapter;
 import com.example.lab2_moviles.Helper.RecyclerItemTouchHelper;
@@ -30,6 +31,9 @@ import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.lab2_moviles.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +61,33 @@ public class AdmProfesorActivity extends AppCompatActivity implements RecyclerIt
         mRecyclerView = findViewById(R.id.recycler_profesorFld);
         profesorList = new ArrayList<>();
         model = new Data();
-        profesorList = model.getProfesorList();
-        mAdapter = new ProfesorAdapter(profesorList, this);
+        /*profesorList = model.getProfesorList();
+        mAdapter = new ProfesorAdapter(profesorList, this);*/
+
+        AsyncTaskManager net = new AsyncTaskManager("http://10.0.2.2:36083/frontend_web/servletProfesores", new AsyncTaskManager.AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+                try {
+                    JSONArray array = new JSONArray(output);
+                    //carreraList = new ArrayList<>();
+                    for (int i = 0; i < array.length(); i++) {
+                        Profesor p = new Profesor();
+                        p.setCedula(array.getJSONObject(i).getString("cedula"));
+                        p.setNombre(array.getJSONObject(i).getString("nombre"));
+                        p.setTelefono(array.getJSONObject(i).getInt("telefono"));
+                        p.setEmail(array.getJSONObject(i).getString("email"));
+                        profesorList.add(p);
+                    }
+                    mAdapter = new ProfesorAdapter(profesorList, AdmProfesorActivity.this);
+                    mRecyclerView.setAdapter(mAdapter);
+
+                    mAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        net.execute(AsyncTaskManager.GET);
 
         whiteNotificationBar(mRecyclerView);
 
@@ -79,7 +108,7 @@ public class AdmProfesorActivity extends AppCompatActivity implements RecyclerIt
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
         intentInformation(); //revisar si se edita o se agrega un profesor
-        mAdapter.notifyDataSetChanged(); //Refrescar la lista del reciclerView
+       // mAdapter.notifyDataSetChanged(); //Refrescar la lista del reciclerView
     }
     public void intentInformation(){
         Bundle extras = getIntent().getExtras();
