@@ -151,6 +151,7 @@ public class LoginActivity extends AppCompatActivity{
                 //putting user on shared preferences
                 //prefs.edit().putString((getString(R.string.preference_user_key)), usuario.getPrivilegio()).apply();
                 Intent intent = new Intent(LoginActivity.this, NavDrawerActivity.class);
+
                 LoginActivity.this.startActivity(intent);
             } else {
                 PasswordView.setError(getString(R.string.error_incorrect_password));

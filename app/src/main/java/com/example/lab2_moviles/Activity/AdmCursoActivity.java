@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lab2_moviles.AccesoDatos.AsyncTaskManager;
 import com.example.lab2_moviles.AccesoDatos.Data;
 import com.example.lab2_moviles.Adapter.CursoAdapter;
 import com.example.lab2_moviles.Helper.RecyclerItemTouchHelper;
@@ -31,6 +32,9 @@ import com.example.lab2_moviles.LogicaNegocio.Curso;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.lab2_moviles.R;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,12 +57,57 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         this.coordinatorLayout = findViewById(R.id.coordinator_layout_curso);
 
         getSupportActionBar().setTitle(getString(R.string.curso));
-
         mRecyclerView = findViewById(R.id.recycler_cursosFld);
+
+
+
+
+
+
+
         cursoList = new ArrayList<>();
-        model= new Data();
-        cursoList= model.getCursoList();
-        mAdapter = new CursoAdapter(cursoList, this);
+
+        //model= new Data();
+        //cursoList= model.getCursoList();
+
+        AsyncTaskManager net = new AsyncTaskManager("http://127.0.0.1:14715/frontend_web/servletCursos", new AsyncTaskManager.AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+                try {
+                    JSONArray array = new JSONArray(output);
+                    //carreraList = new ArrayList<>();
+                    for (int i = 0; i < array.length(); i++) {
+                        Curso c = new Curso("FD", "Fundamentos", 3, 4);
+                        c.setCodigo(array.getJSONObject(i).getString("codigo"));
+                        c.setCreditos(array.getJSONObject(i).getInt("creditos"));
+                        c.setHoras(array.getJSONObject(i).getInt("horasSemanales"));
+                        c.setNombre(array.getJSONObject(i).getString("nombre"));
+
+
+                        cursoList.add(c);
+                    }
+                    mAdapter = new CursoAdapter(cursoList, AdmCursoActivity.this);
+                    mRecyclerView.setAdapter(mAdapter);
+
+                    mAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        net.execute(AsyncTaskManager.GET);
+
+
+
+
+
+
+
+
+
+
+
+
 
         whiteNotificationBar(mRecyclerView);
 
@@ -66,7 +115,7 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        mRecyclerView.setAdapter(mAdapter);
+
 
         fab = findViewById(R.id.AddCurso);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -79,8 +128,12 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
         intentInformation();
-        mAdapter.notifyDataSetChanged();
+        //mAdapter.notifyDataSetChanged();
     }
+
+
+
+
     public void intentInformation(){
         Bundle extras = getIntent().getExtras();
         if(extras != null){ // si extras recibio algun objeto
@@ -90,7 +143,7 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
                 //this.model.getCursoList().add(auxiliar);
                 cursoList.add(auxiliar);
                 Toast.makeText(getApplicationContext(), auxiliar.getNombre() + " agregado correctamente", Toast.LENGTH_LONG).show();
-            } else{ // se esta editando un profesor
+            }else{ // se esta editando un profesor
                 auxiliar = (Curso)getIntent().getSerializableExtra("editCurso");
                 boolean founded = false;
                 for (Curso c1 : cursoList) {
