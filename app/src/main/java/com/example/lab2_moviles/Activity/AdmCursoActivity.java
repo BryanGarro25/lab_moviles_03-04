@@ -66,10 +66,11 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
 
 
         cursoList = new ArrayList<>();
+
         //model= new Data();
         //cursoList= model.getCursoList();
 
-        AsyncTaskManager net = new AsyncTaskManager("http://127.0.0.1:14715/servletCursos", new AsyncTaskManager.AsyncResponse() {
+        AsyncTaskManager net = new AsyncTaskManager("http://127.0.0.1:14715/frontend_web/servletCursos", new AsyncTaskManager.AsyncResponse() {
             @Override
             public void processFinish(String output) {
                 try {
@@ -85,7 +86,10 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
 
                         cursoList.add(c);
                     }
+                    mAdapter = new CursoAdapter(cursoList, AdmCursoActivity.this);
+                    mRecyclerView.setAdapter(mAdapter);
 
+                    mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -103,7 +107,7 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
 
 
 
-        mAdapter = new CursoAdapter(cursoList, this);
+
 
         whiteNotificationBar(mRecyclerView);
 
@@ -111,7 +115,7 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        mRecyclerView.setAdapter(mAdapter);
+
 
         fab = findViewById(R.id.AddCurso);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +128,7 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
         intentInformation();
-        mAdapter.notifyDataSetChanged();
+        //mAdapter.notifyDataSetChanged();
     }
 
 
