@@ -59,29 +59,19 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         getSupportActionBar().setTitle(getString(R.string.curso));
         mRecyclerView = findViewById(R.id.recycler_cursosFld);
 
-
-
-
-
-
-
         cursoList = new ArrayList<>();
-
-        //model= new Data();
-        //cursoList= model.getCursoList();
-
-        AsyncTaskManager net = new AsyncTaskManager("http://10.0.2.2:36083/frontend_web/servletCursos", new AsyncTaskManager.AsyncResponse() {
+        AsyncTaskManager net = new AsyncTaskManager("/servletCursos", new AsyncTaskManager.AsyncResponse() {
             @Override
             public void processFinish(String output) {
                 try {
                     JSONArray array = new JSONArray(output);
-                    //carreraList = new ArrayList<>();
                     for (int i = 0; i < array.length(); i++) {
-                        Curso c = new Curso("FD", "Fundamentos", 3, 4);
+                        Curso c = new Curso("FD", "Fundamentos", 3, 4,0);
                         c.setCodigo(array.getJSONObject(i).getString("codigo"));
                         c.setCreditos(array.getJSONObject(i).getInt("creditos"));
                         c.setHoras(array.getJSONObject(i).getInt("horasSemanales"));
                         c.setNombre(array.getJSONObject(i).getString("nombre"));
+                        c.setId(array.getJSONObject(i).getInt("id"));
                         cursoList.add(c);
                     }
                     mAdapter = new CursoAdapter(cursoList, AdmCursoActivity.this);
@@ -126,20 +116,12 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
             auxiliar = (Curso)getIntent().getSerializableExtra("addCurso");
             if(auxiliar != null){ // add curso trae algun elemento, agregar nuevo
                 //this.model.getCursoList().add(auxiliar);
-                cursoList.add(auxiliar);
+                //cursoList.add(auxiliar);
                 Toast.makeText(getApplicationContext(), auxiliar.getNombre() + " agregado correctamente", Toast.LENGTH_LONG).show();
             }else{ // se esta editando un profesor
                 auxiliar = (Curso)getIntent().getSerializableExtra("editCurso");
-                boolean founded = false;
-                for (Curso c1 : cursoList) {
-                    if (c1.getCodigo().equals(auxiliar.getCodigo())) {
-                        c1.setNombre(auxiliar.getNombre());
-                        c1.setHoras(auxiliar.getHoras());
-                        c1.setCreditos(auxiliar.getCreditos());
-                        founded = true;
-                        break;
-                    }
-                }
+                boolean founded = true;
+
                 if (founded) {
                     Toast.makeText(getApplicationContext(), auxiliar.getNombre() + " editado correctamente", Toast.LENGTH_LONG).show();
                 } else {
@@ -193,7 +175,7 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
             if (viewHolder instanceof CursoAdapter.MyViewHolder) {
                 // get the removed item name to display it in snack bar
                 String name = cursoList.get(viewHolder.getAdapterPosition()).getNombre();
-
+                int deleteId = cursoList.get(viewHolder.getAdapterPosition()).getId();
                 // save the index deleted
                 final int deletedIndex = viewHolder.getAdapterPosition();
                 // remove the item from recyclerView
@@ -210,6 +192,12 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
                 });
                 snackbar.setActionTextColor(Color.YELLOW);
                 snackbar.show();
+                AsyncTaskManager net = new AsyncTaskManager("/servletCursos?x="+deleteId, new AsyncTaskManager.AsyncResponse() {
+                    @Override
+                    public void processFinish(String output) {
+                    }
+                });
+                net.execute(AsyncTaskManager.DELETE);
             }
         } else {
             Curso aux = mAdapter.getSwipedItem(viewHolder.getAdapterPosition());

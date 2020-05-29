@@ -20,12 +20,13 @@ public class AsyncTaskManager  extends AsyncTask<String, String, String>{
     public AsyncResponse delegate = null;
     ProgressDialog progressDialog;
     String ip = "10.0.2.2";
-    String puerto = "8080";
-    String dominio = "GestionAcademica";
+    String puerto = "36083";
+    String dominio = "frontend_web";
+    String url = "http://"+ip+":"+puerto+"/"+dominio;
     private String apiUrl;
 
-    public AsyncTaskManager(String ip, AsyncResponse delegate) {
-        this.ip = ip;
+    public AsyncTaskManager(String url, AsyncResponse delegate) {
+        this.url += url;
         this.delegate = delegate;
     }
 
@@ -48,7 +49,7 @@ public class AsyncTaskManager  extends AsyncTask<String, String, String>{
 
 
             try {
-                url = new URL(this.ip);
+                url = new URL(this.url);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestProperty("Accept", "application/json");
 

@@ -28,13 +28,13 @@ public class Data {
         profesorList.add(profesor);
     }
     public void prepareCursoData() {
-        Curso curso = new Curso("ST", "Soporte", 3, 4);
+       /* Curso curso = new Curso("ST", "Soporte", 3, 4,0);
         cursoList.add(curso);
-        curso = new Curso("FD", "Fundamentos", 3, 4);
+        curso = new Curso("FD", "Fundamentos", 3, 4,0);
         cursoList.add(curso);
-        curso = new Curso("PG1", "Programacion I", 3, 4);
+        curso = new Curso("PG1", "Programacion I", 3, 4,0);
         cursoList.add(curso);
-        curso = new Curso("PG2", "Programacion II", 3, 4);
+        curso = new Curso("PG2", "Programacion II", 3, 4,0);
         cursoList.add(curso);
         curso = new Curso("PG3", "Programacion III", 3, 4);
         cursoList.add(curso);
@@ -43,7 +43,8 @@ public class Data {
         curso = new Curso("EDA", "Estructuras Datos", 3, 4);
         cursoList.add(curso);
         curso = new Curso("EDI", "Estructuras Discretas", 3, 4);
-        cursoList.add(curso);}
+        cursoList.add(curso);*/
+    }
     public List<Profesor> getProfesorList() {
         return profesorList;
     }

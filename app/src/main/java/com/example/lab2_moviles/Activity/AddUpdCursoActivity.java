@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ public class AddUpdCursoActivity extends AppCompatActivity {
     private EditText nomFld;
     private EditText creditosFld;
     private EditText horasFld;
+    private  int current_id = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class AddUpdCursoActivity extends AppCompatActivity {
             editable = extras.getBoolean("editable");
             if (editable) {
                 Curso aux = (Curso) getIntent().getSerializableExtra("curso");
+                current_id = aux.getId();
                 codFld.setText(aux.getCodigo());
                 codFld.setEnabled(false);
                 nomFld.setText(aux.getNombre());
@@ -74,17 +77,19 @@ public class AddUpdCursoActivity extends AppCompatActivity {
         if (validateForm()) {
             Curso cur = new Curso(codFld.getText().toString(), nomFld.getText().toString(),
                     Integer.parseInt(creditosFld.getText().toString()),
-                    Integer.parseInt(horasFld.getText().toString()));
+                    Integer.parseInt(horasFld.getText().toString()),0);
             JSONObject curso = new JSONObject();
             try {
-                curso.put("codigoCurso", codFld.getText().toString());
-                curso.put("nombreCurso", cur.getNombre());
+                curso.put("codigo", codFld.getText().toString());
+                curso.put("nombre", cur.getNombre());
                 curso.put("horasSemanales", cur.getHoras());
-                curso.put("creditosCurso", cur.getCreditos());
+                curso.put("creditos", cur.getCreditos());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            AsyncTaskManager net = new AsyncTaskManager("http://10.0.2.2:36083/frontend_web/servletCursos", new AsyncTaskManager.AsyncResponse() {
+            AsyncTaskManager net = new AsyncTaskManager(
+                    "/servletCursos?curso="+curso.toString(),
+                     new AsyncTaskManager.AsyncResponse() {
                 @Override
                 public void processFinish(String output) {
 
@@ -97,27 +102,30 @@ public class AddUpdCursoActivity extends AppCompatActivity {
             finish();
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void editCurso() {
         if (validateForm()) {
             Curso cur = new Curso(codFld.getText().toString(), nomFld.getText().toString(),
                     Integer.parseInt(creditosFld.getText().toString()),
-                    Integer.parseInt(horasFld.getText().toString()));
+                    Integer.parseInt(horasFld.getText().toString()),0);
+            JSONObject curso = new JSONObject();
+            try {
+                curso.put("codigo", cur.getCodigo());
+                curso.put("nombre", cur.getNombre());
+                curso.put("horasSemanales", cur.getHoras());
+                curso.put("creditos", cur.getCreditos());
+                curso.put("id",current_id);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            AsyncTaskManager net = new AsyncTaskManager(
+                    "/servletCursos?curso="+curso.toString(),
+                    new AsyncTaskManager.AsyncResponse() {
+                        @Override
+                        public void processFinish(String output) {
+
+                        }
+                    });
+            net.execute(AsyncTaskManager.PUT, curso.toString());
             Intent intent = new Intent(getBaseContext(), AdmCursoActivity.class);
             intent.putExtra("editCurso", cur);
             startActivity(intent);

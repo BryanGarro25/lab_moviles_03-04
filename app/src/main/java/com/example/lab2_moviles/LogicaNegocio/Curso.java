@@ -8,12 +8,14 @@ public class Curso implements Serializable{
     private String nombre;
     private int creditos;
     private int horas;
+    private int id;
 
-    public Curso(String codigo, String nombre, int creditos, int horas) {
+    public Curso(String codigo, String nombre, int creditos, int horas, int id) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.creditos = creditos;
         this.horas = horas;
+        this.id = id;
     }
 
     public Curso(String codigo, String nombre) {
@@ -53,6 +55,14 @@ public class Curso implements Serializable{
 
     public void setHoras(int horas) {
         this.horas = horas;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @java.lang.Override
