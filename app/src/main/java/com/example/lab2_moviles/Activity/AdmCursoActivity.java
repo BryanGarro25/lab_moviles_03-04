@@ -70,7 +70,7 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         //model= new Data();
         //cursoList= model.getCursoList();
 
-        AsyncTaskManager net = new AsyncTaskManager("http://127.0.0.1:14715/frontend_web/servletCursos", new AsyncTaskManager.AsyncResponse() {
+        AsyncTaskManager net = new AsyncTaskManager("http://10.0.2.2:36083/frontend_web/servletCursos", new AsyncTaskManager.AsyncResponse() {
             @Override
             public void processFinish(String output) {
                 try {
@@ -82,8 +82,6 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
                         c.setCreditos(array.getJSONObject(i).getInt("creditos"));
                         c.setHoras(array.getJSONObject(i).getInt("horasSemanales"));
                         c.setNombre(array.getJSONObject(i).getString("nombre"));
-
-
                         cursoList.add(c);
                     }
                     mAdapter = new CursoAdapter(cursoList, AdmCursoActivity.this);
@@ -96,19 +94,6 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
             }
         });
         net.execute(AsyncTaskManager.GET);
-
-
-
-
-
-
-
-
-
-
-
-
-
         whiteNotificationBar(mRecyclerView);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());

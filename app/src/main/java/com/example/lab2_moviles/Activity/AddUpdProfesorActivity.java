@@ -3,6 +3,7 @@ package com.example.lab2_moviles.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.lab2_moviles.AccesoDatos.AsyncTaskManager;
 import com.example.lab2_moviles.LogicaNegocio.Profesor;
 import com.example.lab2_moviles.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -15,6 +16,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AddUpdProfesorActivity extends AppCompatActivity {
 
@@ -90,6 +94,22 @@ public class AddUpdProfesorActivity extends AppCompatActivity {
             profesor.setCedula(this.cedulaField.getText().toString());
             profesor.setEmail(this.emailField.getText().toString());
             profesor.setTelefono(Integer.parseInt(this.telefonoField.getText().toString()));
+            JSONObject p = new JSONObject();
+            try {
+                p.put("cedula", profesor.getCedula());
+                p.put("nombreProfesor", profesor.getNombre());
+                p.put("telefonoProfesor", profesor.getTelefono());
+                p.put("emailProfesor", profesor.getEmail());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            AsyncTaskManager net = new AsyncTaskManager("http://10.0.2.2:36083/frontend_web/servletProfesores", new AsyncTaskManager.AsyncResponse() {
+                @Override
+                public void processFinish(String output) {
+
+                }
+            });
+            net.execute(AsyncTaskManager.POST, p.toString());
             Intent intentProfesor =  new Intent(getBaseContext(), AdmProfesorActivity.class);
             intentProfesor.putExtra("addProfesor", profesor);
             startActivity(intentProfesor);

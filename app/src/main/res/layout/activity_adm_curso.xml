@@ -10,29 +10,29 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay" >
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/design_default_color_secondary_variant"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include
-        layout="@layout/content_adm_curso"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <include layout="@layout/content_adm_curso" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/AddCurso"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="#009688"
-        app:srcCompat="@drawable/ic_add_black_24dp" />
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarC"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:src="@drawable/ic_add_black_24dp"
+        android:tint="@android:color/background_light"
+        app:backgroundTint="@color/design_default_color_secondary_variant"
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

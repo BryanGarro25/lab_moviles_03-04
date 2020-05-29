@@ -9,9 +9,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.lab2_moviles.AccesoDatos.AsyncTaskManager;
 import com.example.lab2_moviles.LogicaNegocio.Curso;
 import com.example.lab2_moviles.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AddUpdCursoActivity extends AppCompatActivity {
     private FloatingActionButton fBtn;
@@ -71,6 +75,22 @@ public class AddUpdCursoActivity extends AppCompatActivity {
             Curso cur = new Curso(codFld.getText().toString(), nomFld.getText().toString(),
                     Integer.parseInt(creditosFld.getText().toString()),
                     Integer.parseInt(horasFld.getText().toString()));
+            JSONObject curso = new JSONObject();
+            try {
+                curso.put("codigoCurso", codFld.getText().toString());
+                curso.put("nombreCurso", cur.getNombre());
+                curso.put("horasSemanales", cur.getHoras());
+                curso.put("creditosCurso", cur.getCreditos());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            AsyncTaskManager net = new AsyncTaskManager("http://10.0.2.2:36083/frontend_web/servletCursos", new AsyncTaskManager.AsyncResponse() {
+                @Override
+                public void processFinish(String output) {
+
+                }
+            });
+            net.execute(AsyncTaskManager.POST, curso.toString());
             Intent intent = new Intent(getBaseContext(), AdmCursoActivity.class);
             intent.putExtra("addCurso", cur);
             startActivity(intent);
