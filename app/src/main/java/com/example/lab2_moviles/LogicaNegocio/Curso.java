@@ -3,7 +3,7 @@ package com.example.lab2_moviles.LogicaNegocio;
 import java.io.Serializable;
 
 public class Curso implements Serializable{
-
+    private int id;
     private String codigo;
     private String nombre;
     private int creditos;
@@ -53,6 +53,14 @@ public class Curso implements Serializable{
 
     public void setHoras(int horas) {
         this.horas = horas;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     @java.lang.Override

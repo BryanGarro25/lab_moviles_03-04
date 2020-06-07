@@ -24,6 +24,7 @@ public class AddUpdCursoActivity extends AppCompatActivity {
     private EditText nomFld;
     private EditText creditosFld;
     private EditText horasFld;
+    private int idEditable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class AddUpdCursoActivity extends AppCompatActivity {
                 nomFld.setText(aux.getNombre());
                 creditosFld.setText(Integer.toString(aux.getCreditos()));
                 horasFld.setText(Integer.toString(aux.getHoras()));
+                idEditable = aux.getId();
                 fBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -84,7 +86,14 @@ public class AddUpdCursoActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            AsyncTaskManager net = new AsyncTaskManager("http://10.0.2.2:36083/frontend_web/servletCursos", new AsyncTaskManager.AsyncResponse() {
+
+
+
+            String aux = "http://192.168.1.8:14715/frontend_web/servletCursos?" +
+                    "codigoCurso="+codFld.getText()+"&nombreCurso="+nomFld.getText()+"&horasSemanales="+horasFld.getText()+"&creditosCurso="+creditosFld.getText();
+
+            AsyncTaskManager net = new AsyncTaskManager(aux, new AsyncTaskManager.AsyncResponse() {
+            //AsyncTaskManager net = new AsyncTaskManager("http://192.168.1.8:14715/frontend_web/servletCursos", new AsyncTaskManager.AsyncResponse() {
                 @Override
                 public void processFinish(String output) {
 
@@ -118,6 +127,29 @@ public class AddUpdCursoActivity extends AppCompatActivity {
             Curso cur = new Curso(codFld.getText().toString(), nomFld.getText().toString(),
                     Integer.parseInt(creditosFld.getText().toString()),
                     Integer.parseInt(horasFld.getText().toString()));
+            JSONObject curso = new JSONObject();
+            try {
+                curso.put("codigoCurso", codFld.getText().toString());
+                curso.put("nombreCurso", cur.getNombre());
+                curso.put("horasSemanales", cur.getHoras());
+                curso.put("creditosCurso", cur.getCreditos());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            String aux = "http://192.168.1.8:14715/frontend_web/servletCursos?" +
+                    "codigoCurso="+codFld.getText()+"&nombreCurso="+nomFld.getText()+"&horasSemanales="+horasFld.getText()+"&creditosCurso="+creditosFld.getText()+
+                    "&x="+idEditable;
+
+            AsyncTaskManager net = new AsyncTaskManager(aux, new AsyncTaskManager.AsyncResponse() {
+                //AsyncTaskManager net = new AsyncTaskManager("http://192.168.1.8:14715/frontend_web/servletCursos", new AsyncTaskManager.AsyncResponse() {
+                @Override
+                public void processFinish(String output) {
+
+                }
+            });
+            net.execute(AsyncTaskManager.PUT, curso.toString());
+
             Intent intent = new Intent(getBaseContext(), AdmCursoActivity.class);
             intent.putExtra("editCurso", cur);
             startActivity(intent);

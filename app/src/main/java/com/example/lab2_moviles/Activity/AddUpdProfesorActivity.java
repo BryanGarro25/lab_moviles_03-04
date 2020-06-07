@@ -28,6 +28,7 @@ public class AddUpdProfesorActivity extends AppCompatActivity {
     private EditText cedulaField;
     private EditText emailField;
     private EditText telefonoField;
+    private int idEditable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +56,7 @@ public class AddUpdProfesorActivity extends AppCompatActivity {
                 cedulaField.setEnabled(false);
                 emailField.setText(aux.getEmail());
                 telefonoField.setText(Integer.toString(aux.getTelefono()));
+                idEditable = aux.getId();
                 finishBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -79,6 +81,27 @@ public class AddUpdProfesorActivity extends AppCompatActivity {
             profesor.setCedula(this.cedulaField.getText().toString());
             profesor.setEmail(this.emailField.getText().toString());
             profesor.setTelefono(Integer.parseInt(this.telefonoField.getText().toString()));
+            JSONObject p = new JSONObject();
+            try {
+                p.put("cedula", profesor.getCedula());
+                p.put("nombreProfesor", profesor.getNombre());
+                p.put("telefonoProfesor", profesor.getTelefono());
+                p.put("emailProfesor", profesor.getEmail());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            String aux = "http://192.168.1.8:14715/frontend_web/servletProfesores?" +
+                    "cedula="+nombreField.getText()+"&nombreProfesor="+cedulaField.getText()+"&telefonoProfesor="+telefonoField.getText()+"&emailProfesor="+emailField.getText()+
+                    "&x="+idEditable;
+
+            AsyncTaskManager net = new AsyncTaskManager(aux, new AsyncTaskManager.AsyncResponse() {
+                @Override
+                public void processFinish(String output) {
+
+                }
+            });
+            net.execute(AsyncTaskManager.PUT, p.toString());
+
             Intent intentProfesor =  new Intent(getBaseContext(), AdmProfesorActivity.class);
             intentProfesor.putExtra("editProfesor", profesor);
             startActivity(intentProfesor);
@@ -103,7 +126,10 @@ public class AddUpdProfesorActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            AsyncTaskManager net = new AsyncTaskManager("http://10.0.2.2:36083/frontend_web/servletProfesores", new AsyncTaskManager.AsyncResponse() {
+            String aux = "http://192.168.1.8:14715/frontend_web/servletProfesores?" +
+                    "cedula="+nombreField.getText()+"&nombreProfesor="+cedulaField.getText()+"&telefonoProfesor="+telefonoField.getText()+"&emailProfesor="+emailField.getText();
+
+            AsyncTaskManager net = new AsyncTaskManager(aux, new AsyncTaskManager.AsyncResponse() {
                 @Override
                 public void processFinish(String output) {
 

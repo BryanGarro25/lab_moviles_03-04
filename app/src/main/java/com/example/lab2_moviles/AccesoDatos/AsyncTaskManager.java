@@ -62,24 +62,24 @@ public class AsyncTaskManager  extends AsyncTask<String, String, String>{
 
                     case POST: {
                         urlConnection.setRequestMethod("POST");
-                        urlConnection.setRequestProperty("Accept", "application/json");
-                        urlConnection.setDoOutput(true);
+                        //urlConnection.setRequestProperty("Accept", "application/json");
+                        /*urlConnection.setDoOutput(true);
                         String jsonString = params[1];
                         try (OutputStream os = urlConnection.getOutputStream()) {
                             byte[] input = jsonString.getBytes("utf-8");
                             os.write(input, 0, input.length);
-                        }
+                        }*/
                     }
                     break;
                     case PUT: {
                         urlConnection.setRequestMethod("PUT");
-                        urlConnection.setRequestProperty("Accept", "application/json");
+                       /* urlConnection.setRequestProperty("Accept", "application/json");
                         urlConnection.setDoOutput(true);
                         String jsonString = params[1];
                         try (OutputStream os = urlConnection.getOutputStream()) {
                             byte[] input = jsonString.getBytes("utf-8");
                             os.write(input, 0, input.length);
-                        }
+                        }*/
                     }
                     break;
 

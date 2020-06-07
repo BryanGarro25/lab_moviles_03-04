@@ -17,6 +17,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 /*import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -71,7 +72,7 @@ public class LoginActivity extends AppCompatActivity{
                 return false;
             }
         });
-        Button signButton = (Button) findViewById(R.id.login);
+        ImageButton signButton = (ImageButton) findViewById(R.id.login);
         signButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

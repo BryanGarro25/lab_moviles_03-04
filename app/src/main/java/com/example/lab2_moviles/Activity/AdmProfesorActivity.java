@@ -64,7 +64,7 @@ public class AdmProfesorActivity extends AppCompatActivity implements RecyclerIt
         /*profesorList = model.getProfesorList();
         mAdapter = new ProfesorAdapter(profesorList, this);*/
 
-        AsyncTaskManager net = new AsyncTaskManager("http://10.0.2.2:36083/frontend_web/servletProfesores", new AsyncTaskManager.AsyncResponse() {
+        AsyncTaskManager net = new AsyncTaskManager("http://192.168.1.8:14715/frontend_web/servletProfesores", new AsyncTaskManager.AsyncResponse(){
             @Override
             public void processFinish(String output) {
                 try {
@@ -76,11 +76,12 @@ public class AdmProfesorActivity extends AppCompatActivity implements RecyclerIt
                         p.setNombre(array.getJSONObject(i).getString("nombre"));
                         p.setTelefono(array.getJSONObject(i).getInt("telefono"));
                         p.setEmail(array.getJSONObject(i).getString("email"));
+                        p.setId(array.getJSONObject(i).getInt("id"));
                         profesorList.add(p);
                     }
                     mAdapter = new ProfesorAdapter(profesorList, AdmProfesorActivity.this);
                     mRecyclerView.setAdapter(mAdapter);
-
+                    intentInformation();
                     mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -95,7 +96,6 @@ public class AdmProfesorActivity extends AppCompatActivity implements RecyclerIt
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        mRecyclerView.setAdapter(mAdapter);
 
         addProfesor = findViewById(R.id.addBtn);
         addProfesor.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +107,7 @@ public class AdmProfesorActivity extends AppCompatActivity implements RecyclerIt
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
-        intentInformation(); //revisar si se edita o se agrega un profesor
+         //revisar si se edita o se agrega un profesor
        // mAdapter.notifyDataSetChanged(); //Refrescar la lista del reciclerView
     }
     public void intentInformation(){
@@ -187,7 +187,17 @@ public class AdmProfesorActivity extends AppCompatActivity implements RecyclerIt
             if (viewHolder instanceof ProfesorAdapter.MyViewHolder) {
                 // get the removed item name to display it in snack bar
                 String name = profesorList.get(viewHolder.getAdapterPosition()).getNombre();
+                int id =  profesorList.get(viewHolder.getAdapterPosition()).getId();
+                String aux = "http://192.168.1.8:14715/frontend_web/servletProfesores?" +
+                        "x="+id;
+                AsyncTaskManager net = new AsyncTaskManager(aux, new AsyncTaskManager.AsyncResponse() {
 
+                    @Override
+                    public void processFinish(String output) {
+
+                    }
+                });
+                net.execute(AsyncTaskManager.DELETE);
                 // save the index deleted
                 final int deletedIndex = viewHolder.getAdapterPosition();
                 // remove the item from recyclerView

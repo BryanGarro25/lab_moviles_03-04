@@ -6,7 +6,7 @@ public class Profesor implements Serializable{
     private String nombre;
     private String email;
     private int telefono;
-
+    private int id;
     public Profesor(String cedula, String nombre, String email, int telefono) {
         this.cedula = cedula;
         this.nombre = nombre;
@@ -81,5 +81,13 @@ public class Profesor implements Serializable{
         result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
         result = 31 * result + getTelefono();
         return result;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

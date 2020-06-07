@@ -70,23 +70,25 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         //model= new Data();
         //cursoList= model.getCursoList();
 
-        AsyncTaskManager net = new AsyncTaskManager("http://10.0.2.2:36083/frontend_web/servletCursos", new AsyncTaskManager.AsyncResponse() {
+        AsyncTaskManager net = new AsyncTaskManager("http://192.168.1.8:14715/frontend_web/servletCursos", new AsyncTaskManager.AsyncResponse() {
             @Override
             public void processFinish(String output) {
                 try {
                     JSONArray array = new JSONArray(output);
                     //carreraList = new ArrayList<>();
                     for (int i = 0; i < array.length(); i++) {
-                        Curso c = new Curso("FD", "Fundamentos", 3, 4);
-                        c.setCodigo(array.getJSONObject(i).getString("codigo"));
-                        c.setCreditos(array.getJSONObject(i).getInt("creditos"));
-                        c.setHoras(array.getJSONObject(i).getInt("horasSemanales"));
-                        c.setNombre(array.getJSONObject(i).getString("nombre"));
+                        Curso c = new Curso(
+                        array.getJSONObject(i).getString("codigo"),
+                        array.getJSONObject(i).getString("nombre"),
+                        array.getJSONObject(i).getInt("creditos"),
+                        array.getJSONObject(i).getInt("horasSemanales")
+                        );
+                        c.setId(array.getJSONObject(i).getInt("id"));
                         cursoList.add(c);
                     }
                     mAdapter = new CursoAdapter(cursoList, AdmCursoActivity.this);
                     mRecyclerView.setAdapter(mAdapter);
-
+                    intentInformation();
                     mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -112,7 +114,7 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
-        intentInformation();
+
         //mAdapter.notifyDataSetChanged();
     }
 
@@ -132,6 +134,7 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
                 auxiliar = (Curso)getIntent().getSerializableExtra("editCurso");
                 boolean founded = false;
                 for (Curso c1 : cursoList) {
+                    Toast.makeText(getApplicationContext(), auxiliar.getCodigo() + " vs "+c1.getCodigo(), Toast.LENGTH_LONG).show();
                     if (c1.getCodigo().equals(auxiliar.getCodigo())) {
                         c1.setNombre(auxiliar.getNombre());
                         c1.setHoras(auxiliar.getHoras());
@@ -193,8 +196,18 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
             if (viewHolder instanceof CursoAdapter.MyViewHolder) {
                 // get the removed item name to display it in snack bar
                 String name = cursoList.get(viewHolder.getAdapterPosition()).getNombre();
-
+                int id =  cursoList.get(viewHolder.getAdapterPosition()).getId();
                 // save the index deleted
+                String aux = "http://192.168.1.8:14715/frontend_web/servletCursos?" +
+                        "x="+id;
+                AsyncTaskManager net = new AsyncTaskManager(aux, new AsyncTaskManager.AsyncResponse() {
+
+                    @Override
+                    public void processFinish(String output) {
+
+                    }
+                });
+                net.execute(AsyncTaskManager.DELETE);
                 final int deletedIndex = viewHolder.getAdapterPosition();
                 // remove the item from recyclerView
                 mAdapter.removeItem(viewHolder.getAdapterPosition());
