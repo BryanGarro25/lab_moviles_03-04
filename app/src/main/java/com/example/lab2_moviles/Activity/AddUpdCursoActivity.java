@@ -55,7 +55,7 @@ public class AddUpdCursoActivity extends AppCompatActivity {
                 creditosFld.setText(Integer.toString(aux.getCreditos()));
                 horasFld.setText(Integer.toString(aux.getHoras()));
                 idEditable = aux.getId();
-                fBtn.setOnClickListener(new View.OnClickListener() {
+                fBtn.setOnClickListener(    new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         editCurso();
@@ -89,7 +89,7 @@ public class AddUpdCursoActivity extends AppCompatActivity {
 
 
 
-            String aux = "http://192.168.1.8:14715/frontend_web/servletCursos?" +
+            String aux = "http://10.0.2.2:36083/frontend_web/servletCursos?" +
                     "codigoCurso="+codFld.getText()+"&nombreCurso="+nomFld.getText()+"&horasSemanales="+horasFld.getText()+"&creditosCurso="+creditosFld.getText();
 
             AsyncTaskManager net = new AsyncTaskManager(aux, new AsyncTaskManager.AsyncResponse() {
@@ -106,22 +106,6 @@ public class AddUpdCursoActivity extends AppCompatActivity {
             finish();
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void editCurso() {
         if (validateForm()) {
             Curso cur = new Curso(codFld.getText().toString(), nomFld.getText().toString(),
@@ -137,7 +121,7 @@ public class AddUpdCursoActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            String aux = "http://192.168.1.8:14715/frontend_web/servletCursos?" +
+            String aux = "http://10.0.2.2:36083/frontend_web/servletCursos?" +
                     "codigoCurso="+codFld.getText()+"&nombreCurso="+nomFld.getText()+"&horasSemanales="+horasFld.getText()+"&creditosCurso="+creditosFld.getText()+
                     "&x="+idEditable;
 

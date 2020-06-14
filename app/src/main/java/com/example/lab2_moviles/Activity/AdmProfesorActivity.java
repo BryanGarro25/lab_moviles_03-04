@@ -64,7 +64,7 @@ public class AdmProfesorActivity extends AppCompatActivity implements RecyclerIt
         /*profesorList = model.getProfesorList();
         mAdapter = new ProfesorAdapter(profesorList, this);*/
 
-        AsyncTaskManager net = new AsyncTaskManager("http://192.168.1.8:14715/frontend_web/servletProfesores", new AsyncTaskManager.AsyncResponse(){
+        AsyncTaskManager net = new AsyncTaskManager("http://10.0.2.2:36083/frontend_web/servletProfesores", new AsyncTaskManager.AsyncResponse(){
             @Override
             public void processFinish(String output) {
                 try {
@@ -188,7 +188,7 @@ public class AdmProfesorActivity extends AppCompatActivity implements RecyclerIt
                 // get the removed item name to display it in snack bar
                 String name = profesorList.get(viewHolder.getAdapterPosition()).getNombre();
                 int id =  profesorList.get(viewHolder.getAdapterPosition()).getId();
-                String aux = "http://192.168.1.8:14715/frontend_web/servletProfesores?" +
+                String aux = "http://10.0.2.2:36083/frontend_web/servletProfesores?" +
                         "x="+id;
                 AsyncTaskManager net = new AsyncTaskManager(aux, new AsyncTaskManager.AsyncResponse() {
 

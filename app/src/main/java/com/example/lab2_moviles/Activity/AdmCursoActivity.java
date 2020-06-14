@@ -70,7 +70,7 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
         //model= new Data();
         //cursoList= model.getCursoList();
 
-        AsyncTaskManager net = new AsyncTaskManager("http://192.168.1.8:14715/frontend_web/servletCursos", new AsyncTaskManager.AsyncResponse() {
+        AsyncTaskManager net = new AsyncTaskManager("http://10.0.2.2:36083/frontend_web/servletCursos", new AsyncTaskManager.AsyncResponse() {
             @Override
             public void processFinish(String output) {
                 try {
@@ -198,7 +198,7 @@ public class AdmCursoActivity extends AppCompatActivity implements RecyclerItemT
                 String name = cursoList.get(viewHolder.getAdapterPosition()).getNombre();
                 int id =  cursoList.get(viewHolder.getAdapterPosition()).getId();
                 // save the index deleted
-                String aux = "http://192.168.1.8:14715/frontend_web/servletCursos?" +
+                String aux = "http://10.0.2.2:36083/frontend_web/servletCursos?" +
                         "x="+id;
                 AsyncTaskManager net = new AsyncTaskManager(aux, new AsyncTaskManager.AsyncResponse() {
 

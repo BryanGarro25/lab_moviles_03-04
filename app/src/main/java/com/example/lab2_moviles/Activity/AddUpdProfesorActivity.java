@@ -90,7 +90,7 @@ public class AddUpdProfesorActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            String aux = "http://192.168.1.8:14715/frontend_web/servletProfesores?" +
+            String aux = "http://10.0.2.2:36083/frontend_web/servletProfesores?" +
                     "cedula="+nombreField.getText()+"&nombreProfesor="+cedulaField.getText()+"&telefonoProfesor="+telefonoField.getText()+"&emailProfesor="+emailField.getText()+
                     "&x="+idEditable;
 
@@ -126,7 +126,7 @@ public class AddUpdProfesorActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            String aux = "http://192.168.1.8:14715/frontend_web/servletProfesores?" +
+            String aux = "http://10.0.2.2:36083/frontend_web/servletProfesores?" +
                     "cedula="+nombreField.getText()+"&nombreProfesor="+cedulaField.getText()+"&telefonoProfesor="+telefonoField.getText()+"&emailProfesor="+emailField.getText();
 
             AsyncTaskManager net = new AsyncTaskManager(aux, new AsyncTaskManager.AsyncResponse() {
